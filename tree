@@ -12,7 +12,7 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Application 2
+   # Sensitive keys in codebases
     location /ch1/ {
         proxy_pass http://127.0.0.1:1230/;
         proxy_set_header Host $host;
@@ -21,5 +21,75 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    # Additional configuration here
+
+    # DIND (docker-in-docker) exploitation
+    location /ch2/ {
+        proxy_pass http://127.0.0.1:1231/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+
+    # SSRF in the Kubernetes (K8S) world
+    location /ch3/ {
+        proxy_pass http://127.0.0.1:1232/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Container escape to the host system
+    location /ch4/ {
+        proxy_pass http://127.0.0.1:1233/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-NginX-Proxy true;
+
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+    
+
+        proxy_set_header Upgrade $http_upgrade; # upgrade to http1.1 to use websocket
+        proxy_set_header Connection "upgrade";
+
+        
+    }    
+
+
+    # Attacking private registry
+    location /ch7/ {
+        proxy_pass http://127.0.0.1:1235/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }    
+
+    # RBAC least privileges misconfiguration 
+    location /ch16/ {
+        proxy_pass http://127.0.0.1:1236/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-NginX-Proxy true;
+
+        proxy_redirect off;
+
+        proxy_http_version 1.1;
+    
+        
+        proxy_set_header Upgrade $http_upgrade;  # upgrade to http1.1 to use websocket
+        proxy_set_header Connection "upgrade";
+    } 
+
+
+
+    
 }
