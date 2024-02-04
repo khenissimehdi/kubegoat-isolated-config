@@ -1,0 +1,1 @@
+# kubegoat-isolated-config
